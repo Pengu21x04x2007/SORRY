@@ -93,41 +93,56 @@
   </section>
 
 
-  <section class="music-box">
-    
-<audio id="bg-music" autoplay muted loop>
-  <source
-    src="Baby.aac"
-    type="audio/aac"
-  >
-</audio>
+  
 
-<button id="play-music" type="button">
-  Play our song 💗
-</button>
+<section class="music-box">
+
+  <audio id="bg-music" autoplay muted loop playsinline>
+    <source src="Baby.mp3" type="audio/mpeg">
+  </audio>
+
+  <button id="play-music" type="button">
+    💗 Tap anywhere to hear our song 💗
+  </button>
+
+</section>
 
 <script>
   const audio = document.getElementById("bg-music");
   const button = document.getElementById("play-music");
 
-  async function startMusic() {
-    audio.muted = false;
-
+  // Try autoplay when the website opens
+  window.addEventListener("load", async () => {
     try {
       await audio.play();
-      button.textContent = "Playing our song 💕";
-      document.removeEventListener("click", startMusic);
-      document.removeEventListener("touchstart", startMusic);
+    } catch (error) {
+      console.log("Waiting for user interaction.");
+    }
+  });
+
+  // Start the song with sound after the first interaction
+  async function enableMusic() {
+    try {
+      audio.muted = false;
+      await audio.play();
+
+      button.textContent = "Our song is playing 💕";
+
+      document.removeEventListener("click", enableMusic);
+      document.removeEventListener("touchstart", enableMusic);
     } catch (error) {
       audio.muted = true;
-      button.textContent = "Tap to play our song 🎵";
+      button.textContent = "Tap again to play our song 🎵";
     }
   }
 
-  button.addEventListener("click", startMusic);
-  document.addEventListener("click", startMusic, { once: true });
-  document.addEventListener("touchstart", startMusic, { once: true });
+  document.addEventListener("click", enableMusic);
+  document.addEventListener("touchstart", enableMusic);
+
+  button.addEventListener("click", enableMusic);
 </script>
+
+
 
       <!-- <button class="later" onclick="document.getElementById('songFile').click()">Choose song 🎵</button> -->
       <button class="later" onclick="toggleLetter()">Open my secret letter 💌</button>
